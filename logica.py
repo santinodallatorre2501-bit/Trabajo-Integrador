@@ -1,6 +1,26 @@
-def cargar_csv():
-    pass
+import csv
 
+def cargar_csv(archivo_csv):
+    """
+    Lee el CSV y lo pasa a una lista de diccionarios.
+    Transforma los números a int para podes manejarlos.
+    """
+    lista_paises = []
+    with open(archivo_csv, "r", newline = "", encoding = "utf-8") as archivo:
+        lector = csv.DictReader(archivo)
+        for linea in lector:
+            try:
+                # Pasamos a int los números del diccionario
+                linea["poblacion"] = int(linea["poblacion"])
+                linea["superficie"] = int(linea["superficie"])
+                lista_paises.append(linea)
+            except ValueError:
+                # Validamos que "poblacion" o "superficie" tenga un número válido.
+                print(f"Error de formato en datos de {linea['pais']}. Se omite")
+            except KeyError:
+                # Validamos que la columna del CSV se llama como esperamos
+                print(f"Error  de columna en CSV. Se omite fila")
+    return lista_paises
 def paises_por_nombre():
     pass
 def pais_por_continente():
