@@ -43,7 +43,7 @@ def menu():
 10: Mostrar promedio de población
 11: Mostrar promedio de superficie
 12: Mostrar cantidad de países por continente
-0:  Salir
+13:  Salir
 """)
     opcion = int(input("Ingrese la opcion: "))
 
