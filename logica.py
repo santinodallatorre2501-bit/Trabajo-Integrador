@@ -45,27 +45,103 @@ def mostrar_promedio_superficie():
     pass
 def mostrar_cantidad_paises_continente():
     pass
-
-
-def menu():
+def filtrar_paises():
     opcion = 0
     print("""
---- BIENVENIDO AL MENÚ DE OPCIONES ---
-1:  Buscar país por nombre
-2:  Filtrar país por continente
-3:  Filtrar país por rango de población
-4:  Filtrar país por rango de superficie
-5:  Ordenar países por nombre
-6:  Ordenar países por población
-7:  Ordenar países por superficie
-8:  Mostrar país con mayor población
-9:  Mostrar país con menor población
-10: Mostrar promedio de población
-11: Mostrar promedio de superficie
-12: Mostrar cantidad de países por continente
-13:  Salir
+1: Filtrar país Por continente
+2: Filtrar país por rango de población
+3: Filtrar país por rango de superficie
+4: Volver al menú principal
 """)
-    opcion = int(input("Ingrese la opcion: "))
+    seguir = True
+    while seguir:
+        opcion = input("Ingrese la opción: ")
+        if opcion == "1":
+            pais_por_continente()
+        elif opcion == "2":
+            pais_por_poblacion()
+        elif opcion == "3":
+            pais_por_superficie()
+        elif opcion == "4":
+            seguir = False
+        else:
+            print("Ingrese una opción correcta")
+def ordenar_paises():
+    opcion = 0
+    print("""
+1: Ordenar países por nombre
+2: Ordenar países por población
+3: Ordenar países por superficie
+4: Volver al menú principal
+""")
+    seguir = True
+    while seguir:
+        opcion = input("Ingrese la opción: ")
+        if opcion == "1":
+            ord_paises_por_nombre()
+        elif opcion == "2":
+            ord_paises_por_poblacion()
+        elif opcion == "3":
+            ord_paises_por_superficie()
+        elif opcion == "4":
+            seguir = False
+        else:
+            print("Ingrese una opción correcta")
+def mostrar_estadisticas():
+    opcion = 0
+    print("""
+1: Mostrar país con mayor población
+2: Mostrar país con menor población
+3: Mostrar promedio de población
+4: Mostrar promedio de superficie
+5: Mostrar cantidad de países por continente
+6: Volver al menú principal
+""")
+    seguir = True
+    while seguir:
+        opcion = input("Ingrese la opción: ")
+        if opcion == "1":
+            mostar_mayor_poblacion()
+        elif opcion == "2":
+            mostrar_menor_poblacion()
+        elif opcion == "3":
+            mostrar_promedio_poblacion()
+        elif opcion == "4":
+            mostrar_promedio_superficie()
+        elif opcion == "5":
+            mostrar_cantidad_paises_continente()
+        elif opcion == "6":
+            seguir = False
+        else:
+            print("Ingrese una opción correcta")
 
-cargar_csv()
+def menu():
+    archivo = "paises.csv"
+    lista_paises = cargar_csv(archivo)
+    seguir = True
+    while seguir:
+        opcion = 0
+        print("""
+    --- BIENVENIDO AL MENÚ DE OPCIONES ---
+    1:  Buscar país por nombre
+    2:  Filtrar países 
+    3: Ordenar paises
+    4: Mostrar estadísticas
+    5: Salir
+    """)
+        opcion = input("Ingrese la opción: ")
+        if opcion == "1":
+            paises_por_nombre()
+        elif opcion == "2":
+            filtrar_paises()
+        elif opcion == "3":
+            ordenar_paises()
+        elif opcion == "4":
+            mostrar_estadisticas()
+        elif opcion == "5":
+            print("Gracias por usar nuestro menú. Saliendo del programa...")
+            seguir = False
+        else:
+            print("Ingrese una opción correcta")
+
 menu()
