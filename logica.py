@@ -21,8 +21,36 @@ def cargar_csv(archivo_csv):
                 # Validamos que la columna del CSV se llama como esperamos
                 print(f"Error  de columna en CSV. Se omite fila")
     return lista_paises
-def paises_por_nombre():
-    pass
+def paises_por_nombre(lista_paises):
+    if not lista_paises:
+        print("Error: No hay datos de países cargados.")
+        return
+
+    nombre_buscado = input("Ingrese el nombre del país a buscar: ")
+    
+    # Convertimos la búsqueda a minúsculas para que no importe (case-insensitive)
+    nombre_buscado_lower = nombre_buscado.lower()
+    
+    resultados = []
+    for pais in lista_paises:
+        nombre_pais_lower = pais.get('pais', '').lower()
+        
+        # Comprobamos si el texto buscado está dentro del nombre del país
+        if nombre_buscado_lower in nombre_pais_lower:
+            resultados.append(pais)
+
+    # Fuera del bucle, mostramos los resultados
+    if resultados:
+        print(f"\n--- {len(resultados)} Países Encontrados ---")
+        # Usamos un bucle para imprimir los resultados de forma bonita
+        for pais in resultados:
+            print(f"  País: {pais['pais']}") 
+            print(f"    Continente: {pais['continente']}")
+            print(f"    Población: {pais['poblacion']} hab.")
+            print(f"    Superficie: {pais['superficie']} kilómetros cuadrados.")
+    else:
+        print(f"No se encontraron países que coincidan con '{nombre_buscado}'.")
+
 def pais_por_continente():
     pass
 def pais_por_poblacion():
@@ -131,13 +159,13 @@ def menu():
     """)
         opcion = input("Ingrese la opción: ")
         if opcion == "1":
-            paises_por_nombre()
+            paises_por_nombre(lista_paises)
         elif opcion == "2":
-            filtrar_paises()
+            filtrar_paises(lista_paises)
         elif opcion == "3":
-            ordenar_paises()
+            ordenar_paises(lista_paises)
         elif opcion == "4":
-            mostrar_estadisticas()
+            mostrar_estadisticas(lista_paises)
         elif opcion == "5":
             print("Gracias por usar nuestro menú. Saliendo del programa...")
             seguir = False
