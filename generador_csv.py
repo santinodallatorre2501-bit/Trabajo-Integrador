@@ -39,7 +39,7 @@ def guardar_en_csv(paises, ruta_archivo):
         print("No hay datos para guardar.")
         return
     print(f"Guardando datos en {ruta_archivo}")
-    encabezados = ["nombre", "poblacion", "superficie", "continente"]
+    encabezados = ["pais", "poblacion", "superficie", "continente"]
     
     # Abrimos el archivo en modo "w" para que si el archivo csv ya existe, lo sobreescriba
     # Si no existe, lo crea
