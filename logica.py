@@ -50,9 +50,46 @@ def paises_por_nombre(lista_paises):
             print(f"    Superficie: {pais['superficie']} kilómetros cuadrados.")
     else:
         print(f"No se encontraron países que coincidan con '{nombre_buscado}'.")
-
-def pais_por_continente():
-    pass
+def continente_exacto(paises, continente):
+    lista_filtrada = []
+    for linea in paises:
+        if linea["continente"] == continente:
+            lista_filtrada.append((linea))
+    return lista_filtrada
+def pais_por_continente(paises):
+    print("""
+1: América
+2: África
+3: Europa
+4: Asia
+5: Oceanía
+""")
+    valido = True
+    while valido:
+        opcion = input("Elija el continente: ")
+        if opcion == "1":
+            continente = "America"
+            lista_filtrada = continente_exacto(paises, continente)
+            valido = False
+        elif opcion == "2":
+            continente = "Africa"
+            lista_filtrada = continente_exacto(paises, continente)
+            valido = False
+        elif opcion == "3":
+            continente = "Europa"
+            lista_filtrada = continente_exacto(paises, continente)
+            valido = False
+        elif opcion == "4":
+            continente = "Asia"
+            lista_filtrada = continente_exacto(paises, continente)
+            valido = False
+        elif opcion == "5":
+            continente = "Oceania"
+            lista_filtrada = continente_exacto(paises, continente)
+            valido = False
+        else:
+            print("Ingrese un valor válido")
+    return lista_filtrada
 def pais_por_poblacion():
     pass
 def pais_por_superficie():
@@ -73,19 +110,21 @@ def mostrar_promedio_superficie():
     pass
 def mostrar_cantidad_paises_continente():
     pass
-def filtrar_paises():
-    opcion = 0
-    print("""
-1: Filtrar país Por continente
+def filtrar_paises(paises):
+    seguir = True
+    while seguir:
+        opcion = input(""""
+--- FILTRADO DE PAISES ---
+1: Filtrar país por continente
 2: Filtrar país por rango de población
 3: Filtrar país por rango de superficie
 4: Volver al menú principal
-""")
-    seguir = True
-    while seguir:
-        opcion = input("Ingrese la opción: ")
+Ingrese la opción: """)
         if opcion == "1":
-            pais_por_continente()
+            lista_resultado = pais_por_continente(paises)
+            print(f"--- {len(lista_resultado)} PAÍSES ENCONTRADOS ---")
+            for pais in lista_resultado:
+                print(pais["pais"])
         elif opcion == "2":
             pais_por_poblacion()
         elif opcion == "3":
@@ -95,7 +134,6 @@ def filtrar_paises():
         else:
             print("Ingrese una opción correcta")
 def ordenar_paises():
-    opcion = 0
     print("""
 1: Ordenar países por nombre
 2: Ordenar países por población
@@ -116,7 +154,6 @@ def ordenar_paises():
         else:
             print("Ingrese una opción correcta")
 def mostrar_estadisticas():
-    opcion = 0
     print("""
 1: Mostrar país con mayor población
 2: Mostrar país con menor población
@@ -148,11 +185,10 @@ def menu():
     lista_paises = cargar_csv(archivo)
     seguir = True
     while seguir:
-        opcion = 0
         print("""
     --- BIENVENIDO AL MENÚ DE OPCIONES ---
-    1:  Buscar país por nombre
-    2:  Filtrar países 
+    1: Buscar país por nombre
+    2: Filtrar países 
     3: Ordenar paises
     4: Mostrar estadísticas
     5: Salir
