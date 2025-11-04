@@ -419,5 +419,3 @@ Ingrese la opción: """)
             seguir = False
         else:
             print("Ingrese una opción correcta")
-
-menu()
