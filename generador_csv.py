@@ -1,9 +1,11 @@
 import requests
 import csv
 import sys
+import os
 
 API_URL = "https://api-paises-zilz.onrender.com/paises"
 ARCHIVO_CSV = "paises.csv"
+
 
 def obtener_datos_api():
     """
@@ -50,19 +52,45 @@ def guardar_en_csv(paises, ruta_archivo):
             escritor_csv.writerow(pais)           
     print(f"¡Éxito! Se guardaron {len(paises)} países en {ruta_archivo}.")
 
-def main():
-    # Guardamos el retorno de obtener_datos (la lista de dicts) en una variable
-    datos_paises = obtener_datos_api()
-    # Verificamos que se haya devuelto la lista esperada
-    if datos_paises:
-        # Le pasamos a la función guardar_en_csv la lista de paises, y el nombre del archivo csv
-        guardar_en_csv(datos_paises, ARCHIVO_CSV)
-    else:
-        # Si no se devolvió la lista esperada, terminamos el programa con un error de sistema
-        print("No se pudieron obtener los datos.")
-        # Terminamos con código de error
-        sys.exit(1) 
+def garantizar_existencia_csv():
+    """
+    Verifica si el CSV existe. Si no existe, lo crea desde la API.
+    Devuelve True si el CSV está listo (o ya existía).
+    Devuelve False si la API falló y no se pudo crear.
+    """
+    if not os.path.exists(ARCHIVO_CSV):
+        print(f"El archivo '{ARCHIVO_CSV}' no se encontró.")
+        print("Intentando generarlo automáticamente desde la API...") 
+        # Llamamos al generador para traer datos de la API
+        datos_api = obtener_datos_api()
+        if datos_api:
+            # Si la API funcionó, guardamos el CSV
+            guardar_en_csv(datos_api, ARCHIVO_CSV)
+            print("¡Archivo CSV generado con éxito!")
+            return True 
+        else:
+            # Si la API falló, no podemos hacer nada.
+            print("\nError: No se pudo obtener datos de la API.")
+            return False
+            
+    # Si el if fue falso, significa que el archivo ya existía.
+    # No hacemos nada y devolvemos True.
+    return True
 
+def main():
+    """
+    Llamamos a la función correspondiente para asegurar que el CSV exista.
+    """
+    print("Ejecutando generador de CSV...")
+    
+    if garantizar_existencia_csv():
+        print("-------------------------------------")
+        print("Operación completada: El archivo paises.csv está listo.")
+    else:
+        print("-------------------------------------")
+        print("Error: Falló la creación del CSV desde la API.")
+        sys.exit(1) # Termina con error si falló
+        
 # Usamos este if para que si se quiere reutilizar una función en particular, no se ejecute todo el script.
 if __name__ == "__main__":
     main()
