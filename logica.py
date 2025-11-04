@@ -21,6 +21,7 @@ def cargar_csv(archivo_csv):
                 # Validamos que la columna del CSV se llama como esperamos
                 print(f"Error  de columna en CSV. Se omite fila")
     return lista_paises
+
 def paises_por_nombre(lista_paises):
     if not lista_paises:
         print("Error: No hay datos de países cargados.")
@@ -50,13 +51,24 @@ def paises_por_nombre(lista_paises):
             print(f"    Superficie: {pais['superficie']} kilómetros cuadrados.")
     else:
         print(f"No se encontraron países que coincidan con '{nombre_buscado}'.")
+
 def continente_exacto(paises, continente):
+    """
+    Creamos una lista con los paises del continente buscado
+    """
     lista_filtrada = []
+    # Recorremos el csv y guardamos en una lista los países correspondientes
     for linea in paises:
         if linea["continente"] == continente:
             lista_filtrada.append((linea))
+    # Devolvemos la lista filtrada
     return lista_filtrada
+
 def pais_por_continente(paises):
+    """
+    Creamos un bucle para que el usuario elija el continente que quiere filtrar
+    No sale del bucle hasta que elija una opción válida
+    """
     print("""
 1: América
 2: África
@@ -90,10 +102,76 @@ def pais_por_continente(paises):
         else:
             print("Ingrese un valor válido")
     return lista_filtrada
-def pais_por_poblacion():
-    pass
-def pais_por_superficie():
-    pass
+
+def pedir_entero_no_negativo(msg):
+    """
+    Pide un entero >= 0. Vuelve a pedir si el valor no es válido.
+    """
+    valido = True
+    while valido:
+        numero = input(msg)
+        # Verifica que el número sea válido, si lo es, lo convierte a int
+        if numero.isdigit():
+            numero = int(numero)
+            valido = False
+        else:
+            print("Ingrese un valor válido")
+    # Devuelve el número convertido
+    return numero 
+
+def rangos_validos(minimo, maximo):
+    """
+    Verifica que el rango mínimo sea menor o igual al máximo
+    """
+    if minimo <= maximo:
+        return True
+    else:
+        return False
+    
+def pais_por_poblacion(paises):
+    """
+    Creamos un bucle para que el usuario ingrese los rangos que quiere filtrar
+    No sale del bucle hasta que elija rangos válidos
+    """
+    lista_filtrada = []
+    print("Ingrese el rango mínimo y máximo a filtrar")
+    valido = True
+    while valido:
+        # Pedimos los rangos necesarios y validamos con funciones
+        rango_minimo = pedir_entero_no_negativo("Rango mínimo: ")
+        rango_maximo = pedir_entero_no_negativo("Rango máximo: ")
+        if rangos_validos(rango_minimo, rango_maximo):
+        # Si los rangos son válidos, recorremos la lista. Sino, mensaje de error
+            for pais in paises:
+                # Recorremos la lista y los agregamos a la lista si cumplen con los requisitos
+                if pais["poblacion"] >= rango_minimo and pais["poblacion"] <= rango_maximo:
+                    lista_filtrada.append(pais)
+            valido = False
+        else:
+            print("El rango máximo no puede ser menor que el mínimo, ingrese rangos válidos")
+    # Se devuelve la lista con los países filtrados
+    return lista_filtrada
+
+def pais_por_superficie(paises):
+    lista_filtrada = []
+    print("Ingrese la superficie mínima y máxima a filtrar (km²)")
+    valido = True
+    while valido:
+        # Pedimos las superficies necesarias y validamos con funciones
+        superficie_minima = pedir_entero_no_negativo("Superficie mínima: ")
+        superficie_maxima = pedir_entero_no_negativo("Superficie máxima: ")
+        if rangos_validos(superficie_minima, superficie_maxima):
+        # Si los rangos son válidos, recorremos la lista. Sino, mensaje de error
+            for pais in paises:
+                # Recorremos la lista y los agregamos a la lista si cumplen con los requisitos
+                if pais["superficie"] >= superficie_minima and pais["superficie"] <= superficie_maxima:
+                    lista_filtrada.append(pais)
+            valido = False
+        else:
+            print("La superficie máxima no puede ser menor que la mínima, ingrese superficies válidas")
+    # Se devuelve la lista con los países filtrados
+    return lista_filtrada
+
 def ord_paises_por_nombre():
     pass
 def ord_paises_por_poblacion():
@@ -110,7 +188,11 @@ def mostrar_promedio_superficie():
     pass
 def mostrar_cantidad_paises_continente():
     pass
+
 def filtrar_paises(paises):
+    """
+    Desplegamos el menú del filtrado con sus correspondientes opciones
+    """
     seguir = True
     while seguir:
         opcion = input(""""
@@ -121,18 +203,32 @@ def filtrar_paises(paises):
 4: Volver al menú principal
 Ingrese la opción: """)
         if opcion == "1":
+            # Llamamos a las funciones necesarias para hacer el filtrado por continente
             lista_resultado = pais_por_continente(paises)
             print(f"--- {len(lista_resultado)} PAÍSES ENCONTRADOS ---")
+            # Recorremos la lista filtrada e imprimimos únicamente la key país de cada elemento de la lista
             for pais in lista_resultado:
                 print(pais["pais"])
         elif opcion == "2":
-            pais_por_poblacion()
+            # Llamamos a las funciones necesarias para hacer el filtrado por población
+            lista_resultado = pais_por_poblacion(paises)
+            print(f"--- {len(lista_resultado)} PAÍSES ENCONTRADOS ---")
+            # Recorremos la lista filtrada e imprimimos la key país y población de cada elemento de la lista
+            for pais in lista_resultado:
+                print(f"{pais['pais']}: {pais['poblacion']} habitantes")
         elif opcion == "3":
-            pais_por_superficie()
+            # Llamamos a las funciones necesarias para hacer el filtrado por superficie
+            lista_resultado = pais_por_superficie(paises)
+            print(f"--- {len(lista_resultado)} PAÍSES ENCONTRADOS ---")
+            # Recorremos la lista filtrada e imprimimos la key país y superficie de cada elemento de la lista
+            for pais in lista_resultado:
+                print(f"{pais['pais']}: {pais['superficie']} km²")
         elif opcion == "4":
+            print("Volviendo al menú principal...")
             seguir = False
         else:
             print("Ingrese una opción correcta")
+
 def ordenar_paises():
     print("""
 1: Ordenar países por nombre
@@ -186,13 +282,13 @@ def menu():
     seguir = True
     while seguir:
         print("""
-    --- BIENVENIDO AL MENÚ DE OPCIONES ---
-    1: Buscar país por nombre
-    2: Filtrar países 
-    3: Ordenar paises
-    4: Mostrar estadísticas
-    5: Salir
-    """)
+--- BIENVENIDO AL MENÚ DE OPCIONES ---
+1: Buscar país por nombre
+2: Filtrar países 
+3: Ordenar paises
+4: Mostrar estadísticas
+5: Salir
+""")
         opcion = input("Ingrese la opción: ")
         if opcion == "1":
             paises_por_nombre(lista_paises)
