@@ -47,8 +47,9 @@ def paises_por_nombre(lista_paises):
         for pais in resultados:
             print(f"  País: {pais['pais']}") 
             print(f"  Continente: {pais['continente']}")
-            print(f"  Población: {pais['poblacion']} hab.")
-            print(f"  Superficie: {pais['superficie']} kilómetros cuadrados.")
+            # :,.0f para separar correctamente los digitos
+            print(f"  Población: {pais['poblacion']:,.0f} hab.")
+            print(f"  Superficie: {pais['superficie']:,.0f} kilómetros cuadrados.")
     else:
         print(f"No se encontraron países que coincidan con '{nombre_buscado}'.")
 
@@ -200,6 +201,7 @@ Ingrese la opción: """)
             print(f"--- {len(lista_resultado)} PAÍSES ENCONTRADOS ---")
             # Recorremos la lista filtrada e imprimimos la key país y población de cada elemento de la lista
             for pais in lista_resultado:
+                # :,.0f para separar correctamente los digitos
                 print(f"{pais['pais']}: {pais['poblacion']:,.0f} habitantes")
         elif opcion == "3":
             # Llamamos a las funciones necesarias para hacer el filtrado por superficie
@@ -207,6 +209,7 @@ Ingrese la opción: """)
             print(f"--- {len(lista_resultado)} PAÍSES ENCONTRADOS ---")
             # Recorremos la lista filtrada e imprimimos la key país y superficie de cada elemento de la lista
             for pais in lista_resultado:
+                # :,.0f para separar correctamente los digitos
                 print(f"{pais['pais']}: {pais['superficie']:,.0f} km²")
         elif opcion == "4":
             print("Volviendo al menú principal...")
@@ -221,7 +224,7 @@ def ord_paises_por_nombre(lista_paises):
     lista_ordenada = sorted(lista_paises, key=lambda pais: pais["pais"]) #Ordena la lista alfabeticamente con el sorted
     print("Lista de paises ordenados alfabeticamente: ")
     for pais in lista_ordenada:
-        print(f"Pais: {pais["pais"]} con población de {pais["poblacion"]} habitantes") #Imprime todos los paises ordenados
+        print(f"Pais: {pais["pais"]}") #Imprime todos los paises ordenados
 def ord_paises_por_poblacion(lista_paises):
     if not lista_paises:
         print("Error, no existe una lista de paises") #Lanza error si no existe la lista
@@ -229,7 +232,8 @@ def ord_paises_por_poblacion(lista_paises):
     lista_ordenada = sorted(lista_paises,key=lambda pais: pais["poblacion"]) #Ordena la lista según su población con el sorted
     print("Lista de paises ordenados alfabeticamente: ")
     for pais in lista_ordenada:
-        print(f"Pais: {pais["pais"]} con población de {pais["poblacion"]} habitantes") #Imprime todos los paises ordenados
+        # :,.0f para separar correctamente los digitos
+        print(f"Pais: {pais["pais"]} con población de {pais["poblacion"]:,.0f} habitantes") #Imprime todos los paises ordenados
 def ord_paises_por_superficie(lista_paises):
     if not lista_paises:
         print("Error, no existe una lista de paises") #Lanza error si no existe la lista
@@ -237,7 +241,8 @@ def ord_paises_por_superficie(lista_paises):
     lista_ordenada = sorted(lista_paises,key=lambda pais: pais["superficie"]) #Ordena la lista según su superficie con el sorted
     print("Lista de paises ordenados alfabeticamente: ")
     for pais in lista_ordenada:
-        print(f"Pais: {pais["pais"]} con superficie de {pais["superficie"]}") #Imprime todos los paises ordenados
+        # :,.0f para separar correctamente los digitos
+        print(f"Pais: {pais["pais"]} con superficie de {pais["superficie"]:,.0f}") #Imprime todos los paises ordenados
 def ordenar_paises(lista_paises):
     """
     Desplegamos el menú del ordenamiento en bucle con sus correspondientes opciones
@@ -343,6 +348,7 @@ Ingrese la opción: """)
         if opcion == "1":
         # Llamamos a las funciones necesarias para mostrar al país con mayor población
             pais = mostar_mayor_poblacion(paises)
+        # :,.0f para separar correctamente los digitos
             print(f"""
 --- PAÍS CON MAYOR POBLACIÓN ---
 {pais["pais"]}: {pais["poblacion"]:,.0f} habitantes
@@ -350,6 +356,7 @@ Ingrese la opción: """)
         elif opcion == "2":
         # Llamamos a las funciones necesarias para mostrar al país con menor población
             pais = mostrar_menor_poblacion(paises)
+        # :,.0f para separar correctamente los digitos
             print(f"""
 --- PAÍS CON MENOR POBLACIÓN ---
 {pais["pais"]}: {pais["poblacion"]:,.0f} habitantes
