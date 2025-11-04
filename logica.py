@@ -214,14 +214,31 @@ Ingrese la opción: """)
         else:
             print("Ingrese una opción correcta")
 
-def ord_paises_por_nombre():
-    pass
-def ord_paises_por_poblacion():
-    pass
-def ord_paises_por_superficie():
-    pass
-
-def ordenar_paises():
+def ord_paises_por_nombre(lista_paises):
+    if not lista_paises:
+        print("Error, no hay datos de países cargados") #Lanza error si no existe la lista
+        return
+    lista_ordenada = sorted(lista_paises, key=lambda pais: pais["pais"]) #Ordena la lista alfabeticamente con el sorted
+    print("Lista de paises ordenados alfabeticamente: ")
+    for pais in lista_ordenada:
+        print(f"Pais: {pais["pais"]} con población de {pais["poblacion"]} habitantes") #Imprime todos los paises ordenados
+def ord_paises_por_poblacion(lista_paises):
+    if not lista_paises:
+        print("Error, no existe una lista de paises") #Lanza error si no existe la lista
+        return
+    lista_ordenada = sorted(lista_paises,key=lambda pais: pais["poblacion"]) #Ordena la lista según su población con el sorted
+    print("Lista de paises ordenados alfabeticamente: ")
+    for pais in lista_ordenada:
+        print(f"Pais: {pais["pais"]} con población de {pais["poblacion"]} habitantes") #Imprime todos los paises ordenados
+def ord_paises_por_superficie(lista_paises):
+    if not lista_paises:
+        print("Error, no existe una lista de paises") #Lanza error si no existe la lista
+        return
+    lista_ordenada = sorted(lista_paises,key=lambda pais: pais["superficie"]) #Ordena la lista según su superficie con el sorted
+    print("Lista de paises ordenados alfabeticamente: ")
+    for pais in lista_ordenada:
+        print(f"Pais: {pais["pais"]} con superficie de {pais["superficie"]}") #Imprime todos los paises ordenados
+def ordenar_paises(lista_paises):
     """
     Desplegamos el menú del ordenamiento en bucle con sus correspondientes opciones
     El bucle termina solo si el usuario vuelve al menú principal
@@ -237,11 +254,11 @@ def ordenar_paises():
                        
 Ingrese la opción: """)
         if opcion == "1":
-            ord_paises_por_nombre()
+            ord_paises_por_nombre(lista_paises)
         elif opcion == "2":
-            ord_paises_por_poblacion()
+            ord_paises_por_poblacion(lista_paises)
         elif opcion == "3":
-            ord_paises_por_superficie()
+            ord_paises_por_superficie(lista_paises)
         elif opcion == "4":
             print("Volviendo al menú principal...")
             seguir = False
