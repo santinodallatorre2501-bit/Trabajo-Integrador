@@ -46,9 +46,9 @@ def paises_por_nombre(lista_paises):
         # Usamos un bucle para imprimir los resultados de forma bonita
         for pais in resultados:
             print(f"  País: {pais['pais']}") 
-            print(f"    Continente: {pais['continente']}")
-            print(f"    Población: {pais['poblacion']} hab.")
-            print(f"    Superficie: {pais['superficie']} kilómetros cuadrados.")
+            print(f"  Continente: {pais['continente']}")
+            print(f"  Población: {pais['poblacion']} hab.")
+            print(f"  Superficie: {pais['superficie']} kilómetros cuadrados.")
     else:
         print(f"No se encontraron países que coincidan con '{nombre_buscado}'.")
 
@@ -172,26 +172,10 @@ def pais_por_superficie(paises):
     # Se devuelve la lista con los países filtrados
     return lista_filtrada
 
-def ord_paises_por_nombre():
-    pass
-def ord_paises_por_poblacion():
-    pass
-def ord_paises_por_superficie():
-    pass
-def mostar_mayor_poblacion():
-    pass
-def mostrar_menor_poblacion():
-    pass
-def mostrar_promedio_poblacion():
-    pass
-def mostrar_promedio_superficie():
-    pass
-def mostrar_cantidad_paises_continente():
-    pass
-
 def filtrar_paises(paises):
     """
-    Desplegamos el menú del filtrado con sus correspondientes opciones
+    Desplegamos el menú del filtrado en bucle con sus correspondientes opciones
+    El bucle termina solo si el usuario vuelve al menú principal
     """
     seguir = True
     while seguir:
@@ -201,6 +185,7 @@ def filtrar_paises(paises):
 2: Filtrar país por rango de población
 3: Filtrar país por rango de superficie
 4: Volver al menú principal
+                       
 Ingrese la opción: """)
         if opcion == "1":
             # Llamamos a las funciones necesarias para hacer el filtrado por continente
@@ -215,30 +200,42 @@ Ingrese la opción: """)
             print(f"--- {len(lista_resultado)} PAÍSES ENCONTRADOS ---")
             # Recorremos la lista filtrada e imprimimos la key país y población de cada elemento de la lista
             for pais in lista_resultado:
-                print(f"{pais['pais']}: {pais['poblacion']} habitantes")
+                print(f"{pais['pais']}: {pais['poblacion']:,.0f} habitantes")
         elif opcion == "3":
             # Llamamos a las funciones necesarias para hacer el filtrado por superficie
             lista_resultado = pais_por_superficie(paises)
             print(f"--- {len(lista_resultado)} PAÍSES ENCONTRADOS ---")
             # Recorremos la lista filtrada e imprimimos la key país y superficie de cada elemento de la lista
             for pais in lista_resultado:
-                print(f"{pais['pais']}: {pais['superficie']} km²")
+                print(f"{pais['pais']}: {pais['superficie']:,.0f} km²")
         elif opcion == "4":
             print("Volviendo al menú principal...")
             seguir = False
         else:
             print("Ingrese una opción correcta")
 
+def ord_paises_por_nombre():
+    pass
+def ord_paises_por_poblacion():
+    pass
+def ord_paises_por_superficie():
+    pass
+
 def ordenar_paises():
-    print("""
+    """
+    Desplegamos el menú del ordenamiento en bucle con sus correspondientes opciones
+    El bucle termina solo si el usuario vuelve al menú principal
+    """
+    seguir = True
+    while seguir:
+        opcion = input("""
+--- ORDENAMIENTO DE PAÍSES ---
 1: Ordenar países por nombre
 2: Ordenar países por población
 3: Ordenar países por superficie
 4: Volver al menú principal
-""")
-    seguir = True
-    while seguir:
-        opcion = input("Ingrese la opción: ")
+                       
+Ingrese la opción: """)
         if opcion == "1":
             ord_paises_por_nombre()
         elif opcion == "2":
@@ -246,32 +243,127 @@ def ordenar_paises():
         elif opcion == "3":
             ord_paises_por_superficie()
         elif opcion == "4":
+            print("Volviendo al menú principal...")
             seguir = False
         else:
             print("Ingrese una opción correcta")
-def mostrar_estadisticas():
-    print("""
+
+def mostar_mayor_poblacion(paises):
+    # Establecemos el primer país de la lista como el de mayor población
+    poblacion_max = paises[0]
+    # Recorremos la lista de paises
+    for linea in paises:
+    # Si el pais de la linea actual tiene mayor población que el pais guardado en variable, reemplazamos
+        if linea["poblacion"] > poblacion_max["poblacion"]:
+            poblacion_max = linea
+    # Devolvemos el diccionario completo del país con mayor población
+    return poblacion_max
+
+def mostrar_menor_poblacion(paises):
+    # Establecemos el primer país de la lista como el de menor población
+    poblacion_menor = paises[0]
+    # Recorremos la lista de paises
+    for linea in paises:
+    # Si el pais de la linea actual tiene menor población que el pais guardado en variable, reemplazamos
+        if linea["poblacion"] < poblacion_menor["poblacion"]:
+            poblacion_menor = linea
+     # Devolvemos el diccionario completo del país con menor población
+    return poblacion_menor
+
+def mostrar_promedio_poblacion(paises):
+    # Establecemos un contador en 0
+    poblacion = 0
+    # Recorremos toda la lista y sumamos la key poblacion al contador
+    for linea in paises:
+        poblacion += linea["poblacion"]
+    # Creamos una variable que divide el contador entre la longitud de la lista
+    promedio = poblacion / len(paises)
+    # Devolvemos únicamente la variable con el promedio
+    return promedio
+
+def mostrar_promedio_superficie(paises):
+    superficie = 0
+    for linea in paises:
+    # Recorremos toda la lista y sumamos la key superficie al contador
+        superficie += linea["superficie"]
+    # Creamos una variable que divide el contador entre la longitud de la lista
+    promedio = superficie / len(paises)
+    # Devolvemos únicamente la variable con el promedio
+    return promedio
+
+def mostrar_cantidad_paises_continente(paises):
+    # Creamos un diccionario y guardamos los continentes
+    conteo = {}
+    # Recorremos la lista de países y guardamos la columna 'continente' en una variable
+    for linea in paises:
+        continente = linea["continente"]
+        # Si está en el diccionario, solo sumamos 1 a la key
+        if continente in conteo:
+            conteo[continente] += 1
+        # Si no está, añadimos la key con valor 1
+        else:
+            conteo[continente] = 1
+    # Devolvemos el diccionario completo
+    return conteo
+
+def mostrar_estadisticas(paises):
+    """
+    Desplegamos el menú de estadísticas en bucle con sus correspondientes opciones
+    El bucle termina solo si el usuario vuelve al menú principal
+    """
+    seguir = True
+    while seguir:
+        opcion = input("""
+--- ESTADÍSTICAS ---
 1: Mostrar país con mayor población
 2: Mostrar país con menor población
 3: Mostrar promedio de población
 4: Mostrar promedio de superficie
 5: Mostrar cantidad de países por continente
 6: Volver al menú principal
-""")
-    seguir = True
-    while seguir:
-        opcion = input("Ingrese la opción: ")
+
+Ingrese la opción: """)
         if opcion == "1":
-            mostar_mayor_poblacion()
+        # Llamamos a las funciones necesarias para mostrar al país con mayor población
+            pais = mostar_mayor_poblacion(paises)
+            print(f"""
+--- PAÍS CON MAYOR POBLACIÓN ---
+{pais["pais"]}: {pais["poblacion"]:,.0f} habitantes
+""")
         elif opcion == "2":
-            mostrar_menor_poblacion()
+        # Llamamos a las funciones necesarias para mostrar al país con menor población
+            pais = mostrar_menor_poblacion(paises)
+            print(f"""
+--- PAÍS CON MENOR POBLACIÓN ---
+{pais["pais"]}: {pais["poblacion"]:,.0f} habitantes
+""")
         elif opcion == "3":
-            mostrar_promedio_poblacion()
+        # Llamamos a las funciones necesarias para mostrar el promedio de población
+            promedio = mostrar_promedio_poblacion(paises)
+            print(f"""
+--- PROMEDIO DE POBLACIÓN ---
+{promedio:,.0f} habitantes
+""")
         elif opcion == "4":
-            mostrar_promedio_superficie()
+        # Llamamos a las funciones necesarias para mostrar el promedio de superficie
+            promedio = mostrar_promedio_superficie(paises)
+            print(f"""
+--- PROMEDIO DE SUPERFICIE ---
+{promedio:,.0f} km²
+""")
         elif opcion == "5":
-            mostrar_cantidad_paises_continente()
+        # Llamamos a las funciones necesarias para mostrar la cantidad de países por continente
+            paises_por_continente = mostrar_cantidad_paises_continente(paises)
+            print("""\n--- PAÍSES POR CONTINENTE ---""")
+            # Recorremos el diccionario y usamos .items para conseguir la key y el valor e imprimimos
+            # Además usamos: sorted para crear una nueva lista ordenada
+            # key = lambda para un ordenado específico
+            # item: item[1] para que por cada par se tome en cuenta el elemento 1 para el ordenado
+            # Por defectp, lo ordena de menor a mayor, usamos reverse para que sea al revés
+            for continente, cantidad in sorted(paises_por_continente.items(), key = lambda item: item[1], reverse = True):
+                print(f"{continente}: {cantidad} países")
         elif opcion == "6":
+            print("Volviendo al menú principal...")
             seguir = False
         else:
             print("Ingrese una opción correcta")
@@ -281,15 +373,15 @@ def menu():
     lista_paises = cargar_csv(archivo)
     seguir = True
     while seguir:
-        print("""
+        opcion = input("""
 --- BIENVENIDO AL MENÚ DE OPCIONES ---
 1: Buscar país por nombre
 2: Filtrar países 
 3: Ordenar paises
 4: Mostrar estadísticas
 5: Salir
-""")
-        opcion = input("Ingrese la opción: ")
+
+Ingrese la opción: """)
         if opcion == "1":
             paises_por_nombre(lista_paises)
         elif opcion == "2":
