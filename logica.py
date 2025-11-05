@@ -1,4 +1,10 @@
 import csv
+import os
+from rich.table import Table
+from rich.console import Console
+from rich.panel import Panel
+# console funciona como herramienta de la libreria rich
+console = Console()
 
 def cargar_csv(archivo_csv):
     """
@@ -21,12 +27,84 @@ def cargar_csv(archivo_csv):
                 # Validamos que la columna del CSV se llama como esperamos
                 print(f"Error  de columna en CSV. Se omite fila")
     return lista_paises
+def limpiar_consola():
+    """
+    Función para limpiar la consola y se vea más prolija
+    """
+    # os.system ejecuta un comando de la terminal 'cls' o 'clear'
+    # El if verifica si está en windows, mac o linux
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def mostrar_resultados_paginados(paises, titulo = "Resultados"):
+    """
+    Recibe una lista de países y la muestra en tablas paginadas de a 10
+    """
+    # Verificamos que la lista de países no esté vacía
+    if not paises:
+        # Bold red le asigna al print que tiene que ir en rojo y la letra en 'negrita'
+        console.print("\n[bold red]No se encontraron resultados[/bold red]")
+        input("\nPresione Enter para continuar...")
+        return
+    # Establecemos un contador para el nro de página y para la cantidad de items por página mostrada
+    pagina_actual = 0
+    items_por_pagina = 10
+    # Calculamos el total de páginas
+    total_paginas = (len(paises) // items_por_pagina)
+    # Verificamos, después de dividir por 10, la cantidad de países que sobraron (- de 10) para tener la cant de páginas correctas
+    if len(paises) % items_por_pagina != 0:
+        total_paginas += 1
+    # Bucle para que el usuario elija si o si una opción válida entre pág siguiente, anterior, o volver al menú
+    while True:
+        limpiar_consola()
+        # Establecemos el inicio y el fin de cada página y lo guardamos en una variable
+        inicio = pagina_actual * items_por_pagina
+        fin = inicio + items_por_pagina
+        pagina_a_mostrar = paises[inicio:fin]
+        # Crea una tabla vacía con el título y los números de páginas
+        tabla = Table(title = f"{titulo} (Página {pagina_actual + 1} de {total_paginas})")
+        # Definimos las columnas y le ponemos a cada una un color, y alineación
+        tabla.add_column("País", style = "cyan")
+        tabla.add_column("Continente", style="magenta")
+        tabla.add_column("Población", style="green", justify="right")
+        tabla.add_column("Superficie (km²)", style="yellow", justify="right")
+        # Recorremos la lista pero solo los 10 correspondientes
+        for pais in pagina_a_mostrar:
+            # Agregamos una fila a la tabla con los datos del país correspondiente
+            tabla.add_row(
+                pais['pais'],
+                pais['continente'],
+                f"{pais['poblacion']:,.0f}", # ¡Usamos el formato!
+                f"{pais['superficie']:,.0f}"
+            )
+        # Usamos la herramienta creada para dibujar la tabla
+        console.print(tabla)
+        # Creamos la navegación entre las páginas y verificamos que se pueda hacer la operación que desee el usuario
+        print("\n[S] Siguiente | [A] Anterior | [V] Volver al menú")
+        opcion = input("Opción: ").lower()
+        if opcion == "s":
+            if (pagina_actual + 1) < total_paginas:
+                pagina_actual += 1
+            else:
+                input("Estás en la última página. (Enter para continuar)")
+        elif opcion == "a":
+            if pagina_actual > 0:
+                pagina_actual -= 1
+            else:
+                input("Estás en la primera página. (Enter para continuar)")
+        elif opcion == "v":
+            break # Sale del bucle de paginación
+        else:
+            console.input("[bold red]Ingrese una opción válida. (Enter para continuar)[/bold red]")
 
 def paises_por_nombre(lista_paises):
+    # Llamamos a la función para limpiar consola
+    limpiar_consola()
     if not lista_paises:
         print("Error: No hay datos de países cargados.")
         return
-
+    print("""
+--- BÚSQUEDA DE PAÍSES ---
+""")
     nombre_buscado = input("Ingrese el nombre del país a buscar: ")
     
     # Convertimos la búsqueda a minúsculas para que no importe (case-insensitive)
@@ -50,8 +128,11 @@ def paises_por_nombre(lista_paises):
             # :,.0f para separar correctamente los digitos
             print(f"  Población: {pais['poblacion']:,.0f} hab.")
             print(f"  Superficie: {pais['superficie']:,.0f} kilómetros cuadrados.")
+            print("------------------------------------------------------")
+        input("\nPresione Enter para continuar...")
     else:
         print(f"No se encontraron países que coincidan con '{nombre_buscado}'.")
+        input("\nPresione Enter para continuar...")
 
 def continente_exacto(paises, continente):
     """
@@ -70,6 +151,8 @@ def pais_por_continente(paises):
     Creamos un bucle para que el usuario elija el continente que quiere filtrar
     No sale del bucle hasta que elija una opción válida
     """
+    # Llamamos a la función para limpiar consola
+    limpiar_consola()
     print("""
 1: América
 2: África
@@ -81,26 +164,38 @@ def pais_por_continente(paises):
     while valido:
         opcion = input("Elija el continente: ")
         if opcion == "1":
+            # Llamamos a la función para limpiar consola
+            limpiar_consola()
             continente = "America"
             lista_filtrada = continente_exacto(paises, continente)
             valido = False
         elif opcion == "2":
+            # Llamamos a la función para limpiar consola
+            limpiar_consola()
             continente = "Africa"
             lista_filtrada = continente_exacto(paises, continente)
             valido = False
         elif opcion == "3":
+            # Llamamos a la función para limpiar consola
+            limpiar_consola()
             continente = "Europa"
             lista_filtrada = continente_exacto(paises, continente)
             valido = False
         elif opcion == "4":
+            # Llamamos a la función para limpiar consola
+            limpiar_consola()
             continente = "Asia"
             lista_filtrada = continente_exacto(paises, continente)
             valido = False
         elif opcion == "5":
+            # Llamamos a la función para limpiar consola
+            limpiar_consola()
             continente = "Oceania"
             lista_filtrada = continente_exacto(paises, continente)
             valido = False
         else:
+            # Llamamos a la función para limpiar consola
+            limpiar_consola()
             print("Ingrese un valor válido")
     return lista_filtrada
 
@@ -180,6 +275,8 @@ def filtrar_paises(paises):
     """
     seguir = True
     while seguir:
+        # Llamamos a la función para limpiar consola
+        limpiar_consola()
         opcion = input(""""
 --- FILTRADO DE PAISES ---
 1: Filtrar país por continente
@@ -191,31 +288,24 @@ Ingrese la opción: """)
         if opcion == "1":
             # Llamamos a las funciones necesarias para hacer el filtrado por continente
             lista_resultado = pais_por_continente(paises)
-            print(f"--- {len(lista_resultado)} PAÍSES ENCONTRADOS ---")
-            # Recorremos la lista filtrada e imprimimos únicamente la key país de cada elemento de la lista
-            for pais in lista_resultado:
-                print(pais["pais"])
+            # Mostramos el resultado en una tabla
+            mostrar_resultados_paginados(lista_resultado, "Filtro por continente")
         elif opcion == "2":
             # Llamamos a las funciones necesarias para hacer el filtrado por población
             lista_resultado = pais_por_poblacion(paises)
-            print(f"--- {len(lista_resultado)} PAÍSES ENCONTRADOS ---")
-            # Recorremos la lista filtrada e imprimimos la key país y población de cada elemento de la lista
-            for pais in lista_resultado:
-                # :,.0f para separar correctamente los digitos
-                print(f"{pais['pais']}: {pais['poblacion']:,.0f} habitantes")
+            # Mostramos el resultado en una tabla
+            mostrar_resultados_paginados(lista_resultado, "Filtro por población")
         elif opcion == "3":
             # Llamamos a las funciones necesarias para hacer el filtrado por superficie
             lista_resultado = pais_por_superficie(paises)
-            print(f"--- {len(lista_resultado)} PAÍSES ENCONTRADOS ---")
-            # Recorremos la lista filtrada e imprimimos la key país y superficie de cada elemento de la lista
-            for pais in lista_resultado:
-                # :,.0f para separar correctamente los digitos
-                print(f"{pais['pais']}: {pais['superficie']:,.0f} km²")
+            # Mostramos el resultado en una tabla
+            mostrar_resultados_paginados(lista_resultado, "Filtro por superficie")
         elif opcion == "4":
             print("Volviendo al menú principal...")
             seguir = False
         else:
-            print("Ingrese una opción correcta")
+            console.print("[bold red]Ingrese una opción correcta[/bold red]")
+            input("\nPresione Enter para continuar...")
 
 def ord_paises_por_nombre(lista_paises):
     if not lista_paises:
@@ -225,6 +315,8 @@ def ord_paises_por_nombre(lista_paises):
     print("Lista de paises ordenados alfabeticamente: ")
     for pais in lista_ordenada:
         print(f"Pais: {pais["pais"]}") #Imprime todos los paises ordenados
+        input("\nPresione Enter para continuar...")
+
 def ord_paises_por_poblacion(lista_paises):
     if not lista_paises:
         print("Error, no existe una lista de paises") #Lanza error si no existe la lista
@@ -234,6 +326,8 @@ def ord_paises_por_poblacion(lista_paises):
     for pais in lista_ordenada:
         # :,.0f para separar correctamente los digitos
         print(f"Pais: {pais["pais"]} con población de {pais["poblacion"]:,.0f} habitantes") #Imprime todos los paises ordenados
+        input("\nPresione Enter para continuar...")
+
 def ord_paises_por_superficie(lista_paises):
     if not lista_paises:
         print("Error, no existe una lista de paises") #Lanza error si no existe la lista
@@ -243,6 +337,8 @@ def ord_paises_por_superficie(lista_paises):
     for pais in lista_ordenada:
         # :,.0f para separar correctamente los digitos
         print(f"Pais: {pais["pais"]} con superficie de {pais["superficie"]:,.0f}") #Imprime todos los paises ordenados
+        input("\nPresione Enter para continuar...")
+
 def ordenar_paises(lista_paises):
     """
     Desplegamos el menú del ordenamiento en bucle con sus correspondientes opciones
@@ -250,6 +346,8 @@ def ordenar_paises(lista_paises):
     """
     seguir = True
     while seguir:
+        # Llamamos a la función para limpiar consola
+        limpiar_consola()
         opcion = input("""
 --- ORDENAMIENTO DE PAÍSES ---
 1: Ordenar países por nombre
@@ -260,15 +358,19 @@ def ordenar_paises(lista_paises):
 Ingrese la opción: """)
         if opcion == "1":
             ord_paises_por_nombre(lista_paises)
+            input("\nPresione Enter para continuar...")
         elif opcion == "2":
             ord_paises_por_poblacion(lista_paises)
+            input("\nPresione Enter para continuar...")
         elif opcion == "3":
             ord_paises_por_superficie(lista_paises)
+            input("\nPresione Enter para continuar...")
         elif opcion == "4":
             print("Volviendo al menú principal...")
             seguir = False
         else:
-            print("Ingrese una opción correcta")
+            console.print("[bold red]Ingrese una opción correcta[/bold red]")
+            input("\nPresione Enter para continuar...")
 
 def mostar_mayor_poblacion(paises):
     # Establecemos el primer país de la lista como el de mayor población
@@ -335,68 +437,79 @@ def mostrar_estadisticas(paises):
     """
     seguir = True
     while seguir:
-        opcion = input("""
---- ESTADÍSTICAS ---
-1: Mostrar país con mayor población
-2: Mostrar país con menor población
-3: Mostrar promedio de población
-4: Mostrar promedio de superficie
-5: Mostrar cantidad de países por continente
-6: Volver al menú principal
-
-Ingrese la opción: """)
+        # Llamamos a la función para limpiar consola
+        limpiar_consola()
+        # Creamos una variable para desplegar el menú con bold (letra negrita y con color)
+        menu = """
+[bold]1:[/bold] Mostrar país con mayor población
+[bold]2:[/bold] Mostrar país con menor población
+[bold]3:[/bold] Mostrar promedio de población
+[bold]4:[/bold] Mostrar promedio de superficie
+[bold]5:[/bold] Mostrar cantidad de países por continente
+[bold]6:[/bold] Volver al menú principal
+"""
+        # Imprimimos el titulo dentro de un panel con bordes
+        console.print(Panel(menu, title = "--- ESTADÍSTICAS ---", border_style = "blue"))
+        opcion = input("\nIngrese la opción: ")
         if opcion == "1":
         # Llamamos a las funciones necesarias para mostrar al país con mayor población
             pais = mostar_mayor_poblacion(paises)
-        # :,.0f para separar correctamente los digitos
-            print(f"""
---- PAÍS CON MAYOR POBLACIÓN ---
-{pais["pais"]}: {pais["poblacion"]:,.0f} habitantes
-""")
+        # Desplegamos un panel que muestra los resultados con colores
+            resultado_texto = f"[cyan] {pais['pais']} [/cyan]: [green] {pais['poblacion']:,.0f} [/green] habitantes"
+            console.print(Panel(resultado_texto, title = "--- PAÍS CON MAYOR POBLACIÓN ---"))
+            input("\nPresione Enter para continuar...")
         elif opcion == "2":
         # Llamamos a las funciones necesarias para mostrar al país con menor población
             pais = mostrar_menor_poblacion(paises)
-        # :,.0f para separar correctamente los digitos
-            print(f"""
---- PAÍS CON MENOR POBLACIÓN ---
-{pais["pais"]}: {pais["poblacion"]:,.0f} habitantes
-""")
+        # Desplegamos un panel que muestra los resultados con colores
+            resultado_texto = f"[cyan] {pais['pais']} [/cyan]: [green] {pais['poblacion']:,.0f} [/green] habitantes"
+            console.print(Panel(resultado_texto, title = "--- PAÍS CON MENOR POBLACIÓN ---"))
+            input("\nPresione Enter para continuar...")
         elif opcion == "3":
         # Llamamos a las funciones necesarias para mostrar el promedio de población
             promedio = mostrar_promedio_poblacion(paises)
-            print(f"""
---- PROMEDIO DE POBLACIÓN ---
-{promedio:,.0f} habitantes
-""")
+        # Desplegamos un panel que muestra los resultados con colores
+            resultado_texto = f"El promedio de población mundial es: [green]{promedio:,.0f}[/green] habitantes"
+            console.print(Panel(resultado_texto, title = "--- PROMEDIO DE POBLACIÓN ---"))
+            input("\nPresione Enter para continuar...")
         elif opcion == "4":
         # Llamamos a las funciones necesarias para mostrar el promedio de superficie
             promedio = mostrar_promedio_superficie(paises)
-            print(f"""
---- PROMEDIO DE SUPERFICIE ---
-{promedio:,.0f} km²
-""")
+        # Desplegamos un panel que muestra los resultados con colores
+            resultado_texto = f"El promedio de superficie mundial es: [green]{promedio:,.0f}[/green] km²"
+            console.print(Panel(resultado_texto, title = "--- PROMEDIO DE SUPERFICIE ---"))
+            input("\nPresione Enter para continuar...")
         elif opcion == "5":
         # Llamamos a las funciones necesarias para mostrar la cantidad de países por continente
             paises_por_continente = mostrar_cantidad_paises_continente(paises)
-            print("""\n--- PAÍSES POR CONTINENTE ---""")
+        # Usamos una tabla para mostrar los resultados
+        # Definimos el titulo, sus columnas, los colores de ellas y alineación
+            tabla_conteo = Table(title = "--- PAÍSES POR CONTINENTE ---")
+            tabla_conteo.add_column("Continente", style = "magenta")
+            tabla_conteo.add_column("Cantidad de Países", style = "green", justify = "right")
             # Recorremos el diccionario y usamos .items para conseguir la key y el valor e imprimimos
             # Además usamos: sorted para crear una nueva lista ordenada
             # key = lambda para un ordenado específico
             # item: item[1] para que por cada par se tome en cuenta el elemento 1 para el ordenado
-            # Por defectp, lo ordena de menor a mayor, usamos reverse para que sea al revés
-            for continente, cantidad in sorted(paises_por_continente.items(), key = lambda item: item[1], reverse = True):
-                print(f"{continente}: {cantidad} países")
+            # Por defecto, lo ordena de menor a mayor, usamos reverse para que sea al revés
+            for continente, cantidad in sorted(paises_por_continente.items(), key=lambda item: item[1], reverse=True):
+                tabla_conteo.add_row(continente, str(cantidad))
+            console.print(tabla_conteo)
+            input("\nPresione Enter para continuar...")
         elif opcion == "6":
             print("Volviendo al menú principal...")
             seguir = False
         else:
-            print("Ingrese una opción correcta")
+            console.print("[bold red]Ingrese una opción correcta[/bold red]")
+            input("\nPresione Enter para continuar...")
 
 def menu():
     archivo = "paises.csv"
     lista_paises = cargar_csv(archivo)
     seguir = True
     while seguir:
+        # Llamamos a la función para limpiar consola
+        limpiar_consola()
         opcion = input("""
 --- BIENVENIDO AL MENÚ DE OPCIONES ---
 1: Buscar país por nombre
@@ -410,12 +523,16 @@ Ingrese la opción: """)
             paises_por_nombre(lista_paises)
         elif opcion == "2":
             filtrar_paises(lista_paises)
+            input("\nPresione Enter para continuar...")
         elif opcion == "3":
             ordenar_paises(lista_paises)
+            input("\nPresione Enter para continuar...")
         elif opcion == "4":
             mostrar_estadisticas(lista_paises)
+            input("\nPresione Enter para continuar...")
         elif opcion == "5":
-            print("Gracias por usar nuestro menú. Saliendo del programa...")
+            console.print("[bold green]Gracias por usar nuestro menú. Saliendo del programa...[bold green]")
             seguir = False
         else:
             print("Ingrese una opción correcta")
+            input("\nPresione Enter para continuar...")
