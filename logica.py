@@ -5,6 +5,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.align import Align
 from rich.prompt import Prompt
+from rich import box
 # console funciona como herramienta de la libreria rich
 console = Console()
 
@@ -111,7 +112,7 @@ def paises_por_nombre(lista_paises):
         input("\nPresione Enter para continuar...")
         return [], ""
 
-    nombre_buscado = input("Ingrese el nombre del país a buscar: ")
+    nombre_buscado = Prompt.ask("[bold magenta]Ingrese el nombre del país a buscar[/bold magenta]")
     if nombre_buscado:
     
         nombre_buscado_lower = nombre_buscado.lower()
@@ -146,16 +147,22 @@ def pais_por_continente(paises):
     """
     # Llamamos a la función para limpiar consola
     limpiar_consola()
-    print("""
-1: América
-2: África
-3: Europa
-4: Asia
-5: Oceanía
-""")
+    menu = """
+[bold]1:[/bold] América
+[bold]2:[/bold] África
+[bold]3:[/bold] Europa
+[bold]4:[/bold] Asia
+[bold]5:[/bold] Oceanía
+"""
     valido = True
     while valido:
-        opcion = input("Elija el continente: ")
+        limpiar_consola()
+        # Align permite alinear el cuadro que hagamos con panel
+        # Border style el color del borde
+        # Box para elegir tipo de borde
+        console.print(Align.left(Panel(menu, title = " CONTINENTES ", border_style = "magenta", box = box.ROUNDED)))
+        # Prompt.ask() reemplaza a input() y permite estilos
+        opcion = Prompt.ask("\n[bold magenta]Elija el continente[/bold magenta]")
         if opcion == "1":
             # Llamamos a la función para limpiar consola
             limpiar_consola()
@@ -181,15 +188,12 @@ def pais_por_continente(paises):
             lista_filtrada = continente_exacto(paises, continente)
             valido = False
         elif opcion == "5":
-            # Llamamos a la función para limpiar consola
-            limpiar_consola()
             continente = "Oceania"
             lista_filtrada = continente_exacto(paises, continente)
             valido = False
         else:
-            # Llamamos a la función para limpiar consola
-            limpiar_consola()
-            print("Ingrese un valor válido")
+            console.print(Align.left(Panel("[bold red]Ingrese una opción correcta.[/bold red]", border_style="red", box = box.HEAVY)))
+            input("\nPresione Enter para continuar...")
     return lista_filtrada
 
 def pedir_entero_no_negativo(msg):
@@ -198,13 +202,15 @@ def pedir_entero_no_negativo(msg):
     """
     valido = True
     while valido:
-        numero = input(msg)
-        # Verifica que el número sea válido, si lo es, lo convierte a int
+        # IntPrompt para darle formato al mensaje
+        numero = Prompt.ask(msg)
+        # Verifica que el número sea mayor o igual que 0. IntPrompt ya se asegura de que sea un entero
         if numero.isdigit():
             numero = int(numero)
             valido = False
         else:
-            print("Ingrese un valor válido")
+           console.print(Align.left(Panel("[bold red]Ingrese un valor válido.[/bold red]", border_style="red", box = box.HEAVY)))
+           input("\nPresione Enter para continuar...")
     # Devuelve el número convertido
     return numero
 
@@ -223,12 +229,16 @@ def pais_por_poblacion(paises):
     No sale del bucle hasta que elija rangos válidos
     """
     lista_filtrada = []
-    print("Ingrese el rango mínimo y máximo a filtrar")
+    # Align permite alinear el cuadro que hagamos con panel
+    # Border style el color del borde
+    # Box para elegir tipo de borde
     valido = True
     while valido:
+        limpiar_consola()
         # Pedimos los rangos necesarios y validamos con funciones
-        rango_minimo = pedir_entero_no_negativo("Rango mínimo: ")
-        rango_maximo = pedir_entero_no_negativo("Rango máximo: ")
+        console.print(Align.left(Panel("[bold magenta]Ingrese el rango mínimo y máximo a filtrar[/bold magenta]", border_style = "magenta", box = box.ROUNDED)))
+        rango_minimo = pedir_entero_no_negativo("[bold magenta]Rango mínimo[/bold magenta]")
+        rango_maximo = pedir_entero_no_negativo("[bold magenta]Rango máximo[/bold magenta]")
         if rangos_validos(rango_minimo, rango_maximo):
         # Si los rangos son válidos, recorremos la lista. Sino, mensaje de error
             for pais in paises:
@@ -237,18 +247,27 @@ def pais_por_poblacion(paises):
                     lista_filtrada.append(pais)
             valido = False
         else:
-            print("El rango máximo no puede ser menor que el mínimo, ingrese rangos válidos")
+            console.print(Align.left(Panel("[bold red]El rango máximo no puede ser menor que el mínimo, ingrese rangos válidos[/bold red]", border_style="red")))
+            input("\nPresione Enter para continuar...")
     # Se devuelve la lista con los países filtrados
     return lista_filtrada
 
 def pais_por_superficie(paises):
+    """
+    Creamos un bucle para que el usuario ingrese los rangos que quiere filtrar
+    No sale del bucle hasta que elija rangos válidos
+    """
     lista_filtrada = []
-    print("Ingrese la superficie mínima y máxima a filtrar (km²)")
+    # Align permite alinear el cuadro que hagamos con panel
+    # Border style el color del borde
+    # Box para elegir tipo de borde
     valido = True
     while valido:
+        limpiar_consola()
         # Pedimos las superficies necesarias y validamos con funciones
-        superficie_minima = pedir_entero_no_negativo("Superficie mínima: ")
-        superficie_maxima = pedir_entero_no_negativo("Superficie máxima: ")
+        console.print(Align.left(Panel("[bold magenta]Ingrese la superficie mínima y máxima a filtrar (km²)[/bold magenta]", border_style = "magenta", box = box.ROUNDED)))
+        superficie_minima = pedir_entero_no_negativo("[bold magenta]Superficie mínima[/bold magenta]")
+        superficie_maxima = pedir_entero_no_negativo("[bold magenta]Superficie máxima[/bold magenta]")
         if rangos_validos(superficie_minima, superficie_maxima):
         # Si los rangos son válidos, recorremos la lista. Sino, mensaje de error
             for pais in paises:
@@ -257,7 +276,8 @@ def pais_por_superficie(paises):
                     lista_filtrada.append(pais)
             valido = False
         else:
-            print("La superficie máxima no puede ser menor que la mínima, ingrese superficies válidas")
+            console.print(Align.left(Panel("[bold red]La superficie máxima no puede ser menor que la mínima, ingrese superficies válidas[/bold red]", border_style="red")))
+            input("\nPresione Enter para continuar...")
     # Se devuelve la lista con los países filtrados
     return lista_filtrada
 
@@ -270,14 +290,18 @@ def filtrar_paises(paises):
     while seguir:
         # Llamamos a la función para limpiar consola
         limpiar_consola()
-        opcion = input(""""
---- FILTRADO DE PAISES ---
-1: Filtrar país por continente
-2: Filtrar país por rango de población
-3: Filtrar país por rango de superficie
-4: Volver al menú principal
-
-Ingrese la opción: """)
+        menu = """
+[bold]1:[/bold] Filtrar país por continente
+[bold]2:[/bold] Filtrar país por rango de población
+[bold]3:[/bold] Filtrar país por rango de superficie
+[bold]4:[/bold] Volver al menú principal
+"""
+        # Align permite alinear el cuadro que hagamos con panel
+        # Border style el color del borde
+        # Box para elegir tipo de borde
+        console.print(Align.left(Panel(menu, title = " FILTRADO DE PAÍSES ", border_style = "cyan", box = box.ROUNDED)))
+        # Prompt.ask() reemplaza a input() y permite estilos
+        opcion = Prompt.ask("\n[bold cyan]Ingrese la opción[/bold cyan]")
         if opcion == "1":
             # Llamamos a las funciones necesarias para hacer el filtrado por continente
             lista_resultado = pais_por_continente(paises)
@@ -294,33 +318,29 @@ Ingrese la opción: """)
             # Mostramos el resultado en una tabla
             mostrar_resultados_paginados(lista_resultado, "Filtro por superficie")
         elif opcion == "4":
-            print("Volviendo al menú principal...")
+            Console().print("Volviendo al menú principal...", style = "bold yellow")
             seguir = False
         else:
-            console.print("[bold red]Ingrese una opción correcta[/bold red]")
+            console.print(Align.left(Panel("[bold red]Ingrese una opción correcta.[/bold red]", border_style="red", box = box.HEAVY)))
             input("\nPresione Enter para continuar...")
 
 def ord_paises_por_nombre(lista_paises):
     if not lista_paises:
-        print("Error, no hay datos de países cargados") #Lanza error si no existe la lista
+        Console().print("Error: No hay datos de países cargados.", style="bold red") #Lanza error si no existe la lista
         return
     lista_ordenada = sorted(lista_paises, key=lambda pais: pais["pais"]) #Ordena la lista alfabeticamente con el sorted
-    # print("Lista de paises ordenados alfabeticamente: ")
-    # for pais in lista_ordenada:
-    #     print(f"Pais: {pais["pais"]}") #Imprime todos los paises ordenados
-    #     input("\nPresione Enter para continuar...")
     return lista_ordenada
 
 def ord_paises_por_poblacion(lista_paises):
     if not lista_paises:
-        print("Error, no existe una lista de paises") #Lanza error si no existe la lista
+        Console().print("Error: No hay datos de países cargados.", style="bold red") #Lanza error si no existe la lista
         return
     lista_ordenada = sorted(lista_paises,key=lambda pais: pais["poblacion"]) #Ordena la lista según su población con el sorted
     return lista_ordenada
 
 def ord_paises_por_superficie(lista_paises):
     if not lista_paises:
-        print("Error, no existe una lista de paises") #Lanza error si no existe la lista
+        Console().print("Error: No hay datos de países cargados.", style="bold red") #Lanza error si no existe la lista
         return
     lista_ordenada = sorted(lista_paises,key=lambda pais: pais["superficie"]) #Ordena la lista según su superficie con el sorted
     return lista_ordenada
@@ -335,14 +355,18 @@ def ordenar_paises(lista_paises):
     while seguir:
         # Llamamos a la función para limpiar consola
         limpiar_consola()
-        opcion = input("""
---- ORDENAMIENTO DE PAÍSES ---
-1: Ordenar países por nombre
-2: Ordenar países por población
-3: Ordenar países por superficie
-4: Volver al menú principal
-
-Ingrese la opción: """)
+        menu = """
+[bold]1:[/bold] Ordenar países por nombre
+[bold]2:[/bold] Ordenar países por población
+[bold]3:[/bold] Ordenar países por superficie
+[bold]4:[/bold] Volver al menú principal
+"""
+        # Align permite alinear el cuadro que hagamos con panel
+        # Border style el color del borde
+        # Box para elegir tipo de borde
+        console.print(Align.left(Panel(menu, title = " ORDENAMIENTO DE PAÍSES ", border_style = "cyan", box = box.ROUNDED)))
+        # Prompt.ask() reemplaza a input() y permite estilos
+        opcion = Prompt.ask("\n[bold cyan]Ingrese la opción[/bold cyan]")
         if opcion == "1":
             lista_ordenada = ord_paises_por_nombre(lista_paises)
             mostrar_resultados_paginados(lista_ordenada, "Orden por nombre")
@@ -353,8 +377,9 @@ Ingrese la opción: """)
             lista_ordenada = ord_paises_por_superficie(lista_paises)
             mostrar_resultados_paginados(lista_ordenada, "Orden por superficie")
         elif opcion == "4":
-            print("Volviendo al menú principal...")
+            Console().print("Volviendo al menú principal...", style = "bold yellow")
             seguir = False
+            return []
         else:
             console.print("[bold red]Ingrese una opción correcta[/bold red]")
             input("\nPresione Enter para continuar...")
@@ -436,36 +461,46 @@ def mostrar_estadisticas(paises):
 [bold]5:[/bold] Mostrar cantidad de países por continente
 [bold]6:[/bold] Volver al menú principal
 """
-        # Imprimimos el titulo dentro de un panel con bordes
-        console.print(Panel(menu, title = "--- ESTADÍSTICAS ---", border_style = "blue"))
-        opcion = input("\nIngrese la opción: ")
+        # Align permite alinear el cuadro que hagamos con panel
+        # Border style el color del borde
+        # Box para elegir tipo de borde
+        console.print(Align.left(Panel(menu, title = " ESTADÍSTICAS ", border_style = "blue", box = box.DOUBLE)))
+        # Prompt.ask() reemplaza a input() y permite estilos
+        opcion = Prompt.ask("\n[bold blue]Ingrese la opción[/bold blue]")
         if opcion == "1":
         # Llamamos a las funciones necesarias para mostrar al país con mayor población
             pais = mostar_mayor_poblacion(paises)
         # Desplegamos un panel que muestra los resultados con colores
-            resultado_texto = f"[cyan] {pais['pais']} [/cyan]: [green] {pais['poblacion']:,.0f} [/green] habitantes"
-            console.print(Panel(resultado_texto, title = "--- PAÍS CON MAYOR POBLACIÓN ---"))
+            resultado_texto = f"[magenta] {pais['pais']}:[/magenta] [white] {pais['poblacion']:,.0f} [/white] habitantes"
+            # Agregamos un print vacío para forzar un salto de línea
+            console.print()
+            console.print(Align.left(Panel(resultado_texto, title = " PAÍS CON MAYOR POBLACIÓN ", border_style = "magenta")))
             input("\nPresione Enter para continuar...")
         elif opcion == "2":
         # Llamamos a las funciones necesarias para mostrar al país con menor población
             pais = mostrar_menor_poblacion(paises)
         # Desplegamos un panel que muestra los resultados con colores
-            resultado_texto = f"[cyan] {pais['pais']} [/cyan]: [green] {pais['poblacion']:,.0f} [/green] habitantes"
-            console.print(Panel(resultado_texto, title = "--- PAÍS CON MENOR POBLACIÓN ---"))
+            resultado_texto = f"[magenta] {pais['pais']}:[/magenta] [white] {pais['poblacion']:,.0f} [/white] habitantes"
+            # Agregamos un print vacío para forzar un salto de línea
+            console.print()
+            console.print(Align.left(Panel(resultado_texto, title = " PAÍS CON MENOR POBLACIÓN ", border_style = "magenta")))
             input("\nPresione Enter para continuar...")
         elif opcion == "3":
         # Llamamos a las funciones necesarias para mostrar el promedio de población
             promedio = mostrar_promedio_poblacion(paises)
         # Desplegamos un panel que muestra los resultados con colores
-            resultado_texto = f"El promedio de población mundial es: [green]{promedio:,.0f}[/green] habitantes"
-            console.print(Panel(resultado_texto, title = "--- PROMEDIO DE POBLACIÓN ---"))
+            resultado_texto = f"El promedio de población mundial es: [magenta]{promedio:,.0f} habitantes[/magenta]"
+            # Agregamos un print vacío para forzar un salto de línea
+            console.print()
+            console.print(Align.left(Panel(resultado_texto, title = " PROMEDIO DE POBLACIÓN ", border_style = "magenta")))
             input("\nPresione Enter para continuar...")
         elif opcion == "4":
         # Llamamos a las funciones necesarias para mostrar el promedio de superficie
             promedio = mostrar_promedio_superficie(paises)
         # Desplegamos un panel que muestra los resultados con colores
-            resultado_texto = f"El promedio de superficie mundial es: [green]{promedio:,.0f}[/green] km²"
-            console.print(Panel(resultado_texto, title = "--- PROMEDIO DE SUPERFICIE ---"))
+            resultado_texto = f"El promedio de superficie mundial es: [magenta]{promedio:,.0f} km²[/magenta]"
+            console.print()
+            console.print(Align.left(Panel(resultado_texto, title = " PROMEDIO DE SUPERFICIE ", border_style = "magenta")))
             input("\nPresione Enter para continuar...")
         elif opcion == "5":
         # Llamamos a las funciones necesarias para mostrar la cantidad de países por continente
@@ -485,7 +520,7 @@ def mostrar_estadisticas(paises):
             console.print(tabla_conteo)
             input("\nPresione Enter para continuar...")
         elif opcion == "6":
-            print("Volviendo al menú principal...")
+            Console().print("Volviendo al menú principal...", style = "bold yellow")
             seguir = False
         else:
             console.print("[bold red]Ingrese una opción correcta[/bold red]")
@@ -505,9 +540,12 @@ def menu():
 [bold]4:[/bold] Mostrar estadísticas
 [bold]5:[/bold] Salir
 """
-        console.print(Align.left(Panel(menu, title = " MENÚ DE OPCIONES ", border_style = "blue")))
+        # Align permite alinear el cuadro que hagamos con panel
+        # Border style el color del borde
+        # Box para elegir tipo de borde
+        console.print(Align.left(Panel(menu, title = " MENÚ DE OPCIONES ", border_style = "blue", box = box.DOUBLE)))
         # Prompt.ask() reemplaza a input() y permite estilos
-        opcion = Prompt.ask("\n[bold green]Ingrese la opción[/bold green]")
+        opcion = Prompt.ask("\n[bold blue]Ingrese la opción[/bold blue]")
         if opcion == "1":
             resultados, pais = paises_por_nombre(lista_paises)
             mostrar_resultados_paginados(resultados, f"Resultados para: {pais}")
@@ -522,9 +560,9 @@ def menu():
             input("\nPresione Enter para continuar...")
         elif opcion == "5":
             limpiar_consola()
-            console.print(Panel("[bold green]Gracias por usar nuestro menú. Saliendo del programa...[/bold green]", border_style="green"))
+            console.print(Align.left(Panel("[bold medium_purple]Gracias por usar nuestro menú. Saliendo del programa...[/bold medium_purple]", border_style="medium_purple", box = box.DOUBLE)))
             input("\nPresione Enter para salir...")
             seguir = False
         else:
-            console.print(Panel("[bold red]Ingrese una opción correcta.[/bold red]", border_style="red"))
+            console.print(Align.left(Panel("[bold red]Ingrese una opción correcta.[/bold red]", border_style="red", box = box.HEAVY)))
             input("\nPresione Enter para continuar...")
