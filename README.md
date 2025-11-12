@@ -74,3 +74,7 @@ El programa presenta un menú interactivo de consola que permite:
 
 *Salida (Resultado):*
 El sistema limpia la consola y muestra una *tabla paginada* (de 10 en 10) con todos los países cuya superficie (en km²) está entre 1.000.000 y 5.000.000. Si no encuentra resultados, muestra un panel de error
+
+
+
+LINK DEL VIDEO EXPLICATIVO: https://drive.google.com/file/d/15vIESUhHsq8kcJvSBEp_JpyHKG32edc1/view?usp=sharing
